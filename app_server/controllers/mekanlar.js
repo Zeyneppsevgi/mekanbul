@@ -42,13 +42,13 @@ const mekanBilgisi=function(req, res, next) {
           "gunler":"Pazartesi-Cuma",
           "acilis":"9:00",
           "kapanis":"23:00",
-          "kapali":"false"
+          "kapali":false
         },
         {
           "gunler":"Cumartesi-pazar",
           "acilis":"9:00",
           "kapanis":"22:00",
-          "kapali":"false"
+          "kapali":false
         }
 
       ],
