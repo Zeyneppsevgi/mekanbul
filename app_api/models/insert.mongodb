@@ -11,8 +11,8 @@ db.mekanlar.insertOne(
     "Pastalar"
   ],
   "koordinat": [
-    37.7,
-    30.5
+    37.83226584629666,
+    30.524732239878013
   ],
   "saatler": [
     {
@@ -28,4 +28,5 @@ db.mekanlar.insertOne(
       "kapali": false
     }
   ]
-})
+}
+);
