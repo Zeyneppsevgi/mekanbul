@@ -10,10 +10,10 @@ db.mekanlar.insertOne(
     "Kekler",
     "Pastalar"
   ],
-  "koordinatlar": {
-    "enlem": "37.7",
-    "boylam": "30.5"
-  },
+  "koordinat": [
+    37.7,
+    30.5
+  ],
   "saatler": [
     {
       "gunler": "Pazartesi-Cuma",
