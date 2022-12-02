@@ -3,7 +3,7 @@ var router = express.Router();
 
 const axios = require("axios");
 var apiSecenekleri={
-  sunucu:"https://mekanbul7.zeynepsevgi.repl.co",
+  sunucu:"https://mekanbul.zeynepsevgi.repl.co",
   apiYolu:"/api/mekanlar/",
 };
 
