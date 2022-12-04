@@ -69,7 +69,7 @@ describe("POST /api/mekanlar/:mekanid/yorumlar", function () {
       .send({
         yorumYapan: "ASY",
         puan: 5,
-        yorumMetini: "Kahveler harika",
+        yorumMetni: "Kahveler harika",
       });
     process.env.yorumid = response.body._id;
     expect(response.status).to.eql(201);
