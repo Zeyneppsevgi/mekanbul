@@ -1,19 +1,19 @@
 const axios=require("axios");
 var apiSecenekleri={
-    //sunucu:"http://localhost:3000",
-    sunucu:"https://mekanbul.zeynepsevgi.repl.co",
+  //sunucu:"http://localhost:3000",
+   sunucu:"https://mekanbul.zeynepsevgi.repl.co",
     apiYolu:"/api/mekanlar/"
 }
 var mesafeyiFormatla=function(mesafe){
     var yeniMesafe,birim;
     if(mesafe>1){
-        yeniMesafe=parseFloat(mesafe).toFixed(1); 
+        yeniMesafe=parseFloat(mesafe).toFixed(1); //virgülden sonra 1 karakter getirmesini sağladık toFixed ile.
         birim=" km";
     }else{
-        yeniMesafe=parseInt(mesafe*1000,10); 
+        yeniMesafe=parseInt(mesafe*1000,10); //cevrim 10luk düzende olacak
         birim=" m";
     }
-     return yeniMesafe+birim; 
+     return yeniMesafe+birim; // js de string+int i string olarak birleştirir
 }
 var express = require('express');
 var router = express.Router();
@@ -31,7 +31,7 @@ var anaSayfaOlustur=function(res,mekanListesi){
         "baslik":"Anasayfa",
         "sayfaBaslik":{
             "siteAd":"Mekanbul",
-            "slogan":"Civardaki Mekanları Keşfet"
+            "slogan":"Mekanları Keşfet"
         },
         "mekanlar":mekanListesi,
         "mesaj":mesaj
@@ -44,9 +44,9 @@ const anaSayfa=function(req,res,next){
             enlem:req.query.enlem,
             boylam:req.query.boylam
         }
-    }).then(function(response){ 
+    }).then(function(response){ //tüm mekanları dolaştık
         var i,mekanlar;
-        mekanlar=response.data; 
+        mekanlar=response.data; //mekanlara ulaşmamızı sağlar
         for(i=0;i<mekanlar.length;i++){
             mekanlar[i].mesafe=mesafeyiFormatla(mekanlar[i].mesafe);
         }
@@ -55,7 +55,7 @@ const anaSayfa=function(req,res,next){
         anaSayfaOlustur(res,hata);
     });
 }
-
+// render metodunun ayrı bir metoda taşınması
 var detaySayfasiOlustur=function(res,mekanDetaylari){
     mekanDetaylari.koordinat={
         "enlem":mekanDetaylari.koordinat[0],
@@ -67,10 +67,9 @@ var detaySayfasiOlustur=function(res,mekanDetaylari){
         mekanDetay:mekanDetaylari
     });
 }
-
+// Hata kontrol metodunun oluşturulması    
 var hataGoster = function(res,hata){
     var mesaj;
-    console.log(hata)
     if(hata.response.status==404){
         mesaj="404, Sayfa Bulunamadı";
     }else{
@@ -96,42 +95,33 @@ const mekanBilgisi=function(req,res){
 
 const yorumEkle=function(req,res,next){
     var mekanAdi=req.session.mekanAdi;
-    var mekanid=req.params.mekanid;
-    if(!mekanAdi){
-        res.redirect("/mekan/mekanid"+mekanid);
-    }else{
-        res.render("yorumekle",{baslik:mekanAdi+" mekanına yorum yap!",title:"Yorum Sayfası"});
-    }
-    res.render('yorumekle',{title: 'Yorum Ekle'});
-}
-
+    var mekanid = req.params.mekanid;
+    if(!mekanAdi){ //yönlendirme yapacağız
+        res.redirect("mekanid/"+mekanid);
+    }else
+    res.render('yorumekle',{"baslik":mekanAdi+" mekanına yorum ekle",title: 'Yorum Ekle'});
+};
 const yorumumuEkle=function(req,res){
     var gonderilenYorum,mekanid;
     mekanid=req.params.mekanid;
     if(!req.body.adsoyad || !req.body.yorum){
-        res.redirect("/mekan/mekanid"+mekanid+"/yorum/yeni?hata=evet");
+        res.redirect("/mekan"+mekanid+"/yorum/yeni?hata=evet")
     }
     else{
-        gonderilenYorum={
-            yorumYapan:req.body.adsoyad,
-            yorumMetni:req.body.yorum,
-            puan:req.body.puan
-        }
-
-        axios
-        .post(apiSecenekleri.sunucu+apiSecenekleri.apiYolu+mekanid+"/yorumlar",gonderilenYorum)
-        .then(function(){
-            res.redirect("/mekan/"+mekanid);
-        })
-        .catch(function(hata){
-            hataGoster(req,res,hata);
-        });
+    gonderilenYorum={
+        yorumYapan:req.body.adsoyad,
+        puan:req.body.puan,
+        yorumMetni:req.body.yorum
     }
+    axios.post(apiSecenekleri.sunucu+apiSecenekleri.apiYolu+mekanid+"/yorumlar",gonderilenYorum)
+    .then(function(){
+        res.redirect("/mekan/"+mekanid);
+    });
+  }
 };
-
 module.exports={
     anaSayfa,
     mekanBilgisi,
     yorumEkle,
     yorumumuEkle
-};
+}
